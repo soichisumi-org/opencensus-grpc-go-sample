@@ -74,6 +74,8 @@ github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
+github.com/soichisumi-sandbox/opencensus-grpc-go-sample v0.0.0-20200610075341-0c8bae14c89e h1:XHzzddNy5XYCJRU5eG1J2mhAaVHHd6iFnAHM1RPyepM=
+github.com/soichisumi-sandbox/opencensus-grpc-go-sample v0.0.0-20200610075341-0c8bae14c89e/go.mod h1:txNYyCf8jBHSxre/FmA7HHo2ALi6zRmsONikQdGLktY=
 github.com/soichisumi/go-util v0.0.0-20200119195933-fc16dfa50f48 h1:hfvD3ZbNE5XUbk10qVgvYnfZoOUGTm3HWxcIme1qdFE=
 github.com/soichisumi/go-util v0.0.0-20200119195933-fc16dfa50f48/go.mod h1:lfbQs5t+cRIyBs9FPp2vP0l6CxV7PD0HzfqPS8QyBPM=
 github.com/soichisumi/grpc-echo-server v0.1.6 h1:/QjlOVreX0tZ0yow+aHRDsOonoDNpLDjOSAUlAaoiDQ=
