@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
+	"github.com/soichisumi-sandbox/opencensus-grpc-go-sample/opencensus"
 	"github.com/soichisumi/go-util/logger"
 	"github.com/soichisumi/grpc-echo-server/pkg/proto"
 	"go.opencensus.io/plugin/ocgrpc"
-	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -16,7 +16,7 @@ func NewEchoServer(endpoint string) *EchoServer {
 		endpoint,
 		grpc.WithInsecure(),
 		grpc.WithStatsHandler(&ocgrpc.ClientHandler{}),
-		grpc.WithUnaryInterceptor(),
+		grpc.WithUnaryInterceptor(opencensus.UnaryClientTraceInterceptor()),
 	)
 	if err != nil {
 		logger.Fatal("", zap.Error(err))
@@ -28,10 +28,9 @@ func NewEchoServer(endpoint string) *EchoServer {
 	}
 }
 
-type EchoServer struct{
+type EchoServer struct {
 	client grpctesting.EchoServiceClient
 }
-
 
 func (e *EchoServer) Echo(ctx context.Context, req *grpctesting.EchoRequest) (*grpctesting.EchoResponse, error) {
 	md, _ := metadata.FromIncomingContext(ctx)

@@ -1,16 +1,13 @@
 package main
 
 import (
-	"contrib.go.opencensus.io/exporter/stackdriver"
 	"flag"
 	"fmt"
-	"github.com/soichisumi-sandbox/opencensus-grpc-go-sample/interceptor"
 	"github.com/soichisumi-sandbox/opencensus-grpc-go-sample/opencensus"
 	"github.com/soichisumi/go-util/logger"
 	"github.com/soichisumi/grpc-echo-server/pkg/health"
 	grpctesting "github.com/soichisumi/grpc-echo-server/pkg/proto"
 	"go.opencensus.io/plugin/ocgrpc"
-	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -20,13 +17,10 @@ import (
 
 const (
 	defaultPort = 8080
-	targetHost = "localhost:8888"
+	targetHost  = "localhost:8888"
 )
 
-
-
-
-func main(){
+func main() {
 	var project = flag.String("project", "", "gcp project")
 	var port = flag.Int("p", defaultPort, "port number for listening")
 	var target = flag.String("target", targetHost, "target host")
@@ -42,8 +36,10 @@ func main(){
 	//	logger.Fatal(err.Error(), zap.Error(err))
 	//}
 	//server := grpc.NewServer(grpc.Creds(creds))
-	opencensus.InitClientTrace(*project)
-	opencensus.InitServerTrace(*project)
+	ex := opencensus.SetupExporter(*project)
+	defer ex.Flush()
+
+	opencensus.InitTrace()
 
 	server := grpc.NewServer(
 		grpc.StatsHandler(&ocgrpc.ServerHandler{

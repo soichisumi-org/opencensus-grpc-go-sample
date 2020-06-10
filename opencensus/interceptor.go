@@ -12,36 +12,24 @@ import (
 	"time"
 )
 
-var exporter *stackdriver.Exporter
-
-func initExporter(project string) {
-	if exporter != nil {
-		return
-	}
-	_exporter, err := stackdriver.NewExporter(stackdriver.Options{ProjectID: project})
+func SetupExporter(project string) *stackdriver.Exporter {
+	exporter, err := stackdriver.NewExporter(stackdriver.Options{ProjectID: project})
 	if err != nil {
 		logger.Fatal("", zap.Error(err))
 	}
-	exporter = _exporter
 	view.RegisterExporter(exporter)
-	view.SetReportingPeriod(15 * time.Second) //TODO
+	trace.RegisterExporter(exporter)
+	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
+	return exporter
 }
 
-func InitClientTrace(project string) {
-	initExporter(project)
-
+func InitTrace() {
 	if err := view.Register(ocgrpc.DefaultClientViews...); err != nil {
 		logger.Fatal("", zap.Error(err))
 	}
-}
-
-func InitServerTrace(project string) {
-	initExporter(project)
 	if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
 		logger.Fatal("", zap.Error(err))
 	}
-	trace.RegisterExporter(exporter)
-	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 }
 
 func UnaryClientTraceInterceptor() grpc.UnaryClientInterceptor {

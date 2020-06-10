@@ -38,10 +38,13 @@ func main(){
 	//}
 	//server := grpc.NewServer(grpc.Creds(creds))
 
-	opencensus.InitServerTrace(*project)
+	ex := opencensus.SetupExporter(*project)
+	defer ex.Flush()
+
+	opencensus.InitTrace()
 
 	server := grpc.NewServer(
-		grpc.StatsHandler(&ocgrpc.ServerHandler{IsPublicEndpoint: true}),
+		grpc.StatsHandler(&ocgrpc.ServerHandler{IsPublicEndpoint: false}),
 		grpc.UnaryInterceptor(opencensus.UnaryServerTraceInterceptor()),
 	)
 	grpctesting.RegisterEchoServiceServer(server, echo.NewEchoServer())
