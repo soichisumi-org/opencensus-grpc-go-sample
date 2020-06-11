@@ -4,7 +4,6 @@ import (
 	"context"
 	"contrib.go.opencensus.io/exporter/stackdriver"
 	"github.com/soichisumi/go-util/logger"
-	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 	"go.uber.org/zap"
@@ -13,7 +12,14 @@ import (
 )
 
 func SetupExporter(project string) *stackdriver.Exporter {
-	exporter, err := stackdriver.NewExporter(stackdriver.Options{ProjectID: project})
+	exporter, err := stackdriver.NewExporter(
+		stackdriver.Options{
+			ProjectID: project,
+			//MonitoredResource: monitoredresource.Autodetect(),
+			ReportingInterval: 1 * time.Minute,
+			//DefaultTraceAttributes: make(map[string]interface{}),
+		},
+	)
 	if err != nil {
 		logger.Fatal("", zap.Error(err))
 	}
@@ -24,12 +30,12 @@ func SetupExporter(project string) *stackdriver.Exporter {
 }
 
 func InitTrace() {
-	if err := view.Register(ocgrpc.DefaultClientViews...); err != nil {
-		logger.Fatal("", zap.Error(err))
-	}
-	if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
-		logger.Fatal("", zap.Error(err))
-	}
+	//if err := view.Register(ocgrpc.DefaultClientViews...); err != nil {
+	//	logger.Fatal("", zap.Error(err))
+	//}
+	//if err := view.Register(ocgrpc.DefaultServerViews...); err != nil {
+	//	logger.Fatal("", zap.Error(err))
+	//}
 }
 
 func UnaryClientTraceInterceptor() grpc.UnaryClientInterceptor {
@@ -41,7 +47,7 @@ func UnaryClientTraceInterceptor() grpc.UnaryClientInterceptor {
 }
 
 func UnaryServerTraceInterceptor() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error){
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		ctx, span := trace.StartSpan(ctx, info.FullMethod)
 		defer span.End()
 
