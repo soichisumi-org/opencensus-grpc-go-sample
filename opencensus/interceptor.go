@@ -4,7 +4,6 @@ import (
 	"context"
 	"contrib.go.opencensus.io/exporter/stackdriver"
 	"github.com/soichisumi/go-util/logger"
-	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -23,7 +22,7 @@ func SetupExporter(project string) *stackdriver.Exporter {
 	if err != nil {
 		logger.Fatal("", zap.Error(err))
 	}
-	view.RegisterExporter(exporter)
+	//view.RegisterExporter(exporter)
 	trace.RegisterExporter(exporter)
 	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 	return exporter

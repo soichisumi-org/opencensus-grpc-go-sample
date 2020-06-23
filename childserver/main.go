@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/soichisumi-sandbox/opencensus-grpc-go-sample/opencensus"
 	"github.com/soichisumi/go-util/logger"
-	"github.com/soichisumi/grpc-echo-server/pkg/echo"
 	"github.com/soichisumi/grpc-echo-server/pkg/health"
 	grpctesting "github.com/soichisumi/grpc-echo-server/pkg/proto"
 	"go.opencensus.io/plugin/ocgrpc"
@@ -47,7 +46,7 @@ func main(){
 		grpc.StatsHandler(&ocgrpc.ServerHandler{IsPublicEndpoint: false}),
 		grpc.UnaryInterceptor(opencensus.UnaryServerTraceInterceptor()),
 	)
-	grpctesting.RegisterEchoServiceServer(server, echo.NewEchoServer())
+	grpctesting.RegisterEchoServiceServer(server, NewEchoServer())
 	grpc_health_v1.RegisterHealthServer(server, health.NewHealthServer())
 	reflection.Register(server)
 

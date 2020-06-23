@@ -10,3 +10,7 @@ require (
 	go.uber.org/zap v1.15.0
 	google.golang.org/grpc v1.29.1
 )
+
+replace (
+	github.com/soichisumi-sandbox/opencensus-grpc-go-sample => /Users/s-sumi/go/src/github.com/soichisumi-sandbox/opencensus-grpc-go-sample
+)
