@@ -8,8 +8,10 @@ import (
 	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"math"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -82,6 +84,29 @@ func toAttributes(req interface{}) []trace.Attribute {
 		}
 	}
 	logger.Info("", zap.Any("attr", res))
+	return res
+}
+
+func formatHeader(arr []string) string {
+	switch len(arr) {
+	case 0:
+		return ""
+	case 1:
+		return arr[0]
+	default:
+		return "[" + strings.Join(arr, ",") + "]"
+	}
+}
+
+func attributesFromContext(ctx context.Context) []trace.Attribute {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil
+	}
+	var res []trace.Attribute
+	for k, v := range md {
+		res = append(res, trace.StringAttribute(k, formatHeader(v))) // todo: mask
+	}
 	return res
 }
 
