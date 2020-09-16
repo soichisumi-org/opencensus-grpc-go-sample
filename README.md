@@ -20,5 +20,6 @@ A sample repo of OpenCensus trace instrumentation for gRPC-go server
     * make load
 3. see result
 
-![image](https://user-images.githubusercontent.com/30210641/93374377-96131200-f891-11ea-9765-08a162120dbf.png)
+![image](https://user-images.githubusercontent.com/30210641/93375436-1d14ba00-f893-11ea-80b2-510e1f67b5f8.png)
+
 
