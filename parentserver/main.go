@@ -39,15 +39,8 @@ func main() {
 	ex := opencensus.SetupExporter(*project)
 	defer ex.Flush()
 
-	if err = ex.StartMetricsExporter(); err != nil {
-		logger.Fatal("", zap.Error(err))
-	}
-	defer ex.StopMetricsExporter()
-
-	opencensus.InitTrace()
-
 	server := grpc.NewServer(
-		grpc.StatsHandler(&ocgrpc.ServerHandler{}),
+		grpc.StatsHandler(&ocgrpc.ServerHandler{IsPublicEndpoint: true}),
 		grpc.UnaryInterceptor(opencensus.UnaryServerTraceInterceptor()),
 	)
 	grpctesting.RegisterEchoServiceServer(server, NewEchoServer(*target))

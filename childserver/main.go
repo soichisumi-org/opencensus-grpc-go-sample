@@ -40,8 +40,6 @@ func main(){
 	ex := opencensus.SetupExporter(*project)
 	defer ex.Flush()
 
-	opencensus.InitTrace()
-
 	server := grpc.NewServer(
 		grpc.StatsHandler(&ocgrpc.ServerHandler{IsPublicEndpoint: false}),
 		grpc.UnaryInterceptor(opencensus.UnaryServerTraceInterceptor()),

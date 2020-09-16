@@ -11,6 +11,4 @@ require (
 	google.golang.org/grpc v1.29.1
 )
 
-replace (
-	github.com/soichisumi-sandbox/opencensus-grpc-go-sample => /Users/s-sumi/go/src/github.com/soichisumi-sandbox/opencensus-grpc-go-sample
-)
+replace github.com/soichisumi-sandbox/opencensus-grpc-go-sample => /Users/s-sumi/go/src/github.com/soichisumi-sandbox/opencensus-grpc-go-sample
