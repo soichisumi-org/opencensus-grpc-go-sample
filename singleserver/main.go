@@ -13,17 +13,15 @@ import (
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 	"net"
+	"os"
 )
 
 const (
 	defaultPort = 8080
-	targetHost  = "localhost:8888"
 )
 
 func main() {
-	var project = flag.String("project", "", "gcp project")
 	var port = flag.Int("p", defaultPort, "port number for listening")
-	var target = flag.String("target", targetHost, "target host")
 	flag.Parse()
 
 	logger.Info("server is running.", zap.Int("port", *port))
@@ -36,14 +34,19 @@ func main() {
 	//	logger.Fatal(err.Error(), zap.Error(err))
 	//}
 	//server := grpc.NewServer(grpc.Creds(creds))
-	ex := opencensus.SetupExporter(*project)
+
+	if os.Getenv("GCP_PROJECT") == "" {
+		logger.Fatal("environment variable GCP_PROJECT is required")
+	}
+
+	ex := opencensus.SetupExporter(os.Getenv("GCP_PROJECT"))
 	defer ex.Flush()
 
 	server := grpc.NewServer(
 		grpc.StatsHandler(&ocgrpc.ServerHandler{IsPublicEndpoint: true}),
 		grpc.UnaryInterceptor(opencensus.UnaryServerTraceInterceptor()),
 	)
-	grpctesting.RegisterEchoServiceServer(server, NewEchoServer(*target))
+	grpctesting.RegisterEchoServiceServer(server, NewEchoServer())
 	grpc_health_v1.RegisterHealthServer(server, health.NewHealthServer())
 	reflection.Register(server)
 
